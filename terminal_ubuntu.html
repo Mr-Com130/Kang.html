@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ubuntu Terminal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 0;
+            background-color: #282c34;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .terminal-container {
+            background-color: #1e1e1e;
+            width: 600px;
+            height: 400px;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            padding: 5px;
+            background-color: #333;
+        }
+        .terminal-title {
+            flex: 1;
+            font-size: 16px;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+        .terminal-icon {
+            color: #ffcc00;
+            font-size: 16px;
+            margin-right: 5px;
+        }
+        .terminal-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .terminal-menu li {
+            margin-right: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #fff;
+        }
+        .terminal-body {
+            background-color: #000;
+            height: 260px;
+            overflow-y: auto;
+            padding: 5px;
+            border: none;
+        }
+        .terminal-text {
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+            margin: 0;
+            padding: 0;
+        }
+        .terminal-input {
+            display: flex;
+            align-items: center;
+            padding: 5px;
+            background-color: #333;
+            margin-top: 10px;
+        }
+        .terminal-input-icon {
+            color: #ffcc00;
+            font-size: 14px;
+            margin-right: 5px;
+        }
+        .terminal-input input {
+            background-color: transparent;
+            border: none;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            flex: 1;
+            outline: none;
+        }
+        .terminal-input input:focus {
+            border-bottom: 1px solid #ffcc00;
+        }
+        .file-search {
+            margin-top: 10px;
+            padding: 5px;
+            background-color: #333;
+        }
+        .file-search-icon {
+            color: #ffcc00;
+            font-size: 14px;
+            margin-right: 5px;
+        }
+        .file-search input {
+            background-color: transparent;
+            border: none;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            flex: 1;
+            outline: none;
+        }
+        .file-search input:focus {
+            border-bottom: 1px solid #ffcc00;
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal-container">
+        <div class="terminal-header">
+            <i class="terminal-icon fas fa-code"></i>
+            <div class="terminal-title">Ubuntu Terminal</div>
+            <ul class="terminal-menu">
+                <li onclick="showInfo()">Info</li>
+                <li onclick="showHelp()">Help</li>
+            </ul>
+        </div>
+        <div class="terminal-body">
+            <pre class="terminal-text">Welcome to Ubuntu Terminal!
+Type your commands here...
+> </pre>
+        </div>
+        <div class="terminal-input">
+            <i class="terminal-input-icon fas fa-angle-right"></i>
+            <input type="text" id="input" placeholder="Enter your code here..." onkeypress="handleKeyPress(event)">
+        </div>
+        <div class="file-search">
+            <i class="file-search-icon fas fa-search"></i>
+            <input type="text" id="fileSearch" placeholder="Search files..." oninput="searchFiles()">
+        </div>
+        <div id="searchResults"></div>
+    </div>
+
+    <script>
+        const files = [
+            { name: "index.html", size: "2.3KB", type: "HTML file" },
+            { name: "style.css", size: "1.2KB", type: "CSS file" },
+            { name: "script.js", size: "3.5KB", type: "JavaScript file" },
+            { name: "README.md", size: "1.8KB", type: "Markdown file" },
+            { name: "data.txt", size: "0.5KB", type: "Text file" },
+            { name: "app.js", size: "2.8KB", type: "JavaScript file" },
+            { name: "config.json", size: "0.8KB", type: "JSON file" }
+        ];
+
+        function handleKeyPress(event) {
+            if (event.keyCode === 13) {
+                const inputElement = document.getElementById("input");
+                const outputElement = document.getElementsByClassName("terminal-text")[0];
+                const inputValue = inputElement.value.trim();
+                outputElement.innerHTML += "> " + inputValue + "\n";
+                inputElement.value = "";
+                outputElement.scrollTop = outputElement.scrollHeight;
+
+                // Add your custom command handling here...
+                // For example, you can check for specific commands and display corresponding output.
+                if (inputValue === "ls") {
+                    for (const file of files) {
+                        outputElement.innerHTML += `${file.name} (${file.size}, ${file.type})\n`;
+                    }
+                } else if (inputValue.startsWith("cat ")) {
+                    const fileName = inputValue.substring(4).trim();
+                    const file = files.find(file => file.name === fileName);
+                    if (file) {
+                        // Simulate file content by generating random text
+                        const fileContent = generateRandomText();
+                        outputElement.innerHTML += `File: ${file.name}\nSize: ${file.size}\nType: ${file.type}\n\n${fileContent}\n`;
+                    } else {
+                        outputElement.innerHTML += `cat: ${fileName}: No such file or directory\n`;
+                    }
+                } else {
+                    outputElement.innerHTML += "Command not recognized. Please try again.\n";
+                }
+            }
+        }
+
+        function generateRandomText() {
+            const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            let randomText = "";
+            for (let i = 0; i < 100; i++) {
+                randomText += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return randomText;
+        }
+
+        function searchFiles() {
+            const searchInput = document.getElementById("fileSearch").value.trim().toLowerCase();
+            const searchResults = files.filter(file => file.name.toLowerCase().includes(searchInput));
+
+            const searchResultsElement = document.getElementById("searchResults");
+            searchResultsElement.innerHTML = "";
+            for (const result of searchResults) {
+                searchResultsElement.innerHTML += `${result.name} (${result.size}, ${result.type})<br>`;
+            }
+        }
+
+        function showInfo() {
+            const outputElement = document.getElementsByClassName("terminal-text")[0];
+            outputElement.innerHTML += "This is a simple Ubuntu terminal simulation using HTML, CSS, and JavaScript.\n";
+        }
+
+        function showHelp() {
+            const outputElement = document.getElementsByClassName("terminal-text")[0];
+            outputElement.innerHTML += "Available Commands:\n";
+            outputElement.innerHTML += "ls - List files in the current directory\n";
+            outputElement.innerHTML += "cat [file] - Display the contents of a file\n";
+            outputElement.innerHTML += "info - Show information about the terminal\n";
+            outputElement.innerHTML += "help - Show available commands\n";
+        }
+    </script>
+</body>
+</html>
