@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Emoticon bergerak</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: linear-gradient(to bottom, #FFC0CB, #87CEEB); /* Ubah warna latar belakang di sini */
+    }
+
+    .emoticon {
+      position: absolute;
+      pointer-events: none;
+      font-size: 20px;
+      animation: float 5s linear infinite;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100vh) rotate(1080deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="emoticon-container"></div>
+
+  <script>
+    const container = document.querySelector('.emoticon-container');
+
+    function createEmoticon() {
+      const emoticonCount = 20; // Jumlah emoticon yang ingin ditambahkan pada setiap interval
+
+      for (let i = 0; i < emoticonCount; i++) {
+        const emoticon = document.createElement('span');
+
+        // Array berisi karakter emotikon yang berbeda
+        const emoticons = [
+          '&#128512;', '&#128513;', '&#128514;', '&#128515;', '&#128516;', // dan seterusnya, tambahkan karakter emotikon lainnya di sini
+          '&#128522;', '&#128525;', '&#128526;', '&#128527;', '&#128540;' // Emotikon tambahan
+        ];
+
+        const randomEmoticon = emoticons[Math.floor(Math.random() * emoticons.length)]; // Memilih karakter emotikon secara acak
+        emoticon.innerHTML = randomEmoticon;
+        emoticon.classList.add('emoticon');
+
+        const left = Math.random() * window.innerWidth;
+        const top = Math.random() * window.innerHeight;
+        const size = Math.floor(Math.random() * 40) + 20; // Ukuran acak antara 20px - 60px
+        const color = '#' + Math.floor(Math.random() * 16777215).toString(16); // Warna acak
+
+        emoticon.style.left = `${left}px`;
+        emoticon.style.top = `${top}px`;
+        emoticon.style.fontSize = `${size}px`;
+        emoticon.style.color = color;
+
+        container.appendChild(emoticon);
+
+        const animationDuration = Math.random() * (10 - 5) + 5;
+        emoticon.style.animationDuration = `${animationDuration}s`;
+
+        setTimeout(() => {
+          container.removeChild(emoticon);
+        }, animationDuration * 1000);
+      }
+    }
+
+    setInterval(createEmoticon, 500); // Ubah interval waktu di sini (dalam milidetik)
+  </script>
+  <center><h1>Codingan by Kang Html</h1></center>
+</body>
+</html>
